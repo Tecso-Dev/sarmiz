@@ -28,7 +28,7 @@
 | تهدید | کجا می‌زند | دفاع |
 |---|---|---|
 | نشت داده بین کسب‌وکارها | مسیرهای <span dir="ltr">`/venues/{venue_id}/*`</span>، repositoryها، پخش رویداد در `realtime`، کلیدهای کش | `venue_id` در هر query، `not_found` برای کسب‌وکار دیگر، scope در ticket، `venue_id` در کلید کش، مجموعه‌ی تست <span dir="ltr">`tests/isolation/`</span> ([فصل ۹](09-auth-and-permissions.md)) |
-| تصاحب حساب با کد یک‌بارمصرف | <span dir="ltr">`/auth/otp/request`</span> و <span dir="ltr">`/auth/otp/verify`</span> | محدودیت نرخ برای شماره و IP، ۵ تلاش برای هر کد، عمر ۱۲۰ ثانیه، hash در Redis، جواب یکسان، تشخیص استفاده‌ی دوباره از توکن تازه‌سازی، ثبت ورود در `audit_log` |
+| تصاحب حساب با کد یک‌بارمصرف | <span dir="ltr">`/auth/otp/request`</span> و <span dir="ltr">`/auth/otp/verify`</span> | محدودیت نرخ برای شماره و IP، ۵ تلاش برای هر کد، عمر ۱۲۰ ثانیه، HMAC با کلید secret در Redis، جواب یکسان، تشخیص استفاده‌ی دوباره از توکن تازه‌سازی، ثبت ورود در `audit_log` |
 | دست بردن در قیمت | `POST /public/t/{qr_token}/orders` | مرورگر فقط شناسه‌ی آیتم، گزینه‌ها و تعداد را می‌فرستد؛ `order` قیمت را از `catalog.PriceItems` می‌گیرد و جمع را خودش حساب می‌کند |
 | تکرار پرداخت یا تأیید دوباره | callback درگاه و job تطبیق | `authority` یکتا، قفل ردیف با `FOR UPDATE`، پرداختِ `verified` همان جواب قبلی را برمی‌گرداند، همه‌چیز در یک تراکنش |
 | callback جعلی | `GET /public/payments/zarinpal/callback` | وضعیت داخل query string نادیده گرفته می‌شود؛ فقط verify سمت سرور با مبلغ ذخیره‌شده تصمیم می‌گیرد |

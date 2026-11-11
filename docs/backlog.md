@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # فهرست کارها
 
 همه‌ی کارهای ۶ هفته‌ی انتشار ۱. هر کار یک issue در GitHub با همین شناسه دارد و جزئیاتش در صفحه‌ی تحویل همان هفته و بخش است.
@@ -145,3 +147,5 @@
 | `W6-ALL-4` | [مستندات](handoffs/week-6/README.md) | همه‌ی تیم |  |  | [#89](https://github.com/Tecso-Dev/sarmiz/issues/89) |
 | `W6-ALL-5` | [سنجیدن معیارهای «تمام شد»](handoffs/week-6/README.md) | همه‌ی تیم |  |  | [#90](https://github.com/Tecso-Dev/sarmiz/issues/90) |
 | `W6-ALL-6` | [روز دمو و تحویل به دوره‌ی بعد](handoffs/week-6/README.md) | همه‌ی تیم |  |  | [#91](https://github.com/Tecso-Dev/sarmiz/issues/91) |
+
+</div>
