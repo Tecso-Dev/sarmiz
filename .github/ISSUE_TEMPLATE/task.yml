@@ -1,0 +1,43 @@
+name: کار
+description: یک کار از برنامه‌ی ۶ هفته، با معیار پذیرش
+title: "W?-???-?: "
+labels: ["type:task"]
+body:
+  - type: input
+    id: task_id
+    attributes:
+      label: شناسه‌ی کار
+      placeholder: W2-CORE-1
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: هدف
+      description: این کار چه مشکلی را حل می‌کند؟
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: محدوده
+      description: چه چیزی داخل این کار است و چه چیزی بیرون آن
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: معیار پذیرش
+      description: هر معیار یک خط با «- [ ]»
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: input
+    id: handoff
+    attributes:
+      label: تحویل مربوط
+      placeholder: docs/handoffs/week-2/core.md
+  - type: input
+    id: depends_on
+    attributes:
+      label: وابسته به
+      placeholder: W1-CORE-3

@@ -1,0 +1,34 @@
+name: docs
+
+# Checks the Markdown documents. The team adds the code CI (lint, test, build per service) in task W1-PA-5.
+
+on:
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "scripts/**"
+  push:
+    branches: [main]
+    paths:
+      - "**/*.md"
+      - "scripts/**"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Right-to-left wrapper is up to date
+        run: |
+          python3 scripts/rtl.py
+          git diff --exit-code || (echo "Run: python3 scripts/rtl.py and commit the result" && exit 1)
+      - name: Markdown layout
+        run: python3 scripts/check-markdown.py
+      - name: Internal links
+        run: python3 scripts/check-links.py

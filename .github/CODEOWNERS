@@ -1,0 +1,16 @@
+# Who must review which paths.
+# The mentor owns everything by default and must review payment and auth code.
+# Replace @sobhanaz with the mentor's account if someone else mentors this cohort,
+# and add each pair's GitHub accounts next to their paths in week 0.
+
+*                                   @sobhanaz
+
+# Payment and auth: mentor review is mandatory (docs/SPEC.md sections 8 and 9).
+/services/order/internal/payment/   @sobhanaz
+/services/identity/                 @sobhanaz
+/services/gateway/                  @sobhanaz
+
+# Contracts: changes affect every pair.
+/proto/                             @sobhanaz
+/docs/SPEC.md                       @sobhanaz
+/docs/decisions/                    @sobhanaz

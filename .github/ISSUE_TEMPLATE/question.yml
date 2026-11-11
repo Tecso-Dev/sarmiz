@@ -1,0 +1,20 @@
+name: سؤال یا تصمیم
+description: سؤالی که جوابش در مستندات نیست، یا پیشنهاد تغییر یک تصمیم
+title: "سؤال: "
+labels: ["type:question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: سؤال
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: زمینه
+      description: روی کدام کار هستی، چه چیزی را خواندی و چه چیزی را امتحان کردی؟
+  - type: textarea
+    id: options
+    attributes:
+      label: گزینه‌هایی که به ذهنت می‌رسد

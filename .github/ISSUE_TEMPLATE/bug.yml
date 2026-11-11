@@ -1,0 +1,56 @@
+name: باگ
+description: چیزی که درست کار نمی‌کند
+title: "باگ: "
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        هیچ رمز، توکن، شماره‌ی موبایل واقعی یا داده‌ی مشتری در این فرم نگذار.
+  - type: dropdown
+    id: where
+    attributes:
+      label: کجا
+      options:
+        - local
+        - staging
+        - production
+    validations:
+      required: true
+  - type: dropdown
+    id: service
+    attributes:
+      label: کدام بخش
+      options:
+        - gateway
+        - identity
+        - catalog
+        - order
+        - realtime
+        - ai
+        - web
+        - infrastructure
+        - نمی‌دانم
+  - type: textarea
+    id: steps
+    attributes:
+      label: قدم‌های بازسازی
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: انتظار داشتم چه شود
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: چه شد
+      description: خطای کامل را داخل بلوک کد بگذار، نه عکس. اگر request_id داری بنویس.
+    validations:
+      required: true
