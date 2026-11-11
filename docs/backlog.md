@@ -1,5 +1,3 @@
-<div dir="rtl">
-
 # فهرست کارها
 
 همه‌ی کارهای ۶ هفته‌ی انتشار ۱. هر کار یک issue در GitHub با همین شناسه دارد و جزئیاتش در صفحه‌ی تحویل همان هفته و بخش است.
@@ -77,12 +75,12 @@
 | شناسه | کار | بخش | برچسب | وابسته به | issue |
 |---|---|---|---|---|---|
 | `W3-CORE-1` | [جریان ساخت منو از فایل](handoffs/week-3/core.md) | هسته |  |  | [#42](https://github.com/Tecso-Dev/sarmiz/issues/42) |
-| `W3-CORE-2` | [منوی زمان‌دار و کلید «تمام شد»](handoffs/week-3/core.md) | هسته |  |  | [#43](https://github.com/Tecso-Dev/sarmiz/issues/43) |
+| `W3-CORE-2` | [منوی زمان‌دار و کلید «تمام شد»](handoffs/week-3/core.md) | هسته | اختیاری |  | [#43](https://github.com/Tecso-Dev/sarmiz/issues/43) |
 | `W3-CORE-3` | [ترجمه‌ی منو](handoffs/week-3/core.md) | هسته |  |  | [#44](https://github.com/Tecso-Dev/sarmiz/issues/44) |
-| `W3-CORE-4` | [«با این می‌چسبد» و نشان‌ها](handoffs/week-3/core.md) | هسته |  |  | [#45](https://github.com/Tecso-Dev/sarmiz/issues/45) |
+| `W3-CORE-4` | [«با این می‌چسبد» و نشان‌ها](handoffs/week-3/core.md) | هسته | اختیاری |  | [#45](https://github.com/Tecso-Dev/sarmiz/issues/45) |
 | `W3-ORD-1` | [درخواست خدمت](handoffs/week-3/order.md) | سفارش |  |  | [#46](https://github.com/Tecso-Dev/sarmiz/issues/46) |
 | `W3-ORD-2` | [محکم‌کاری قواعد سفارش](handoffs/week-3/order.md) | سفارش |  |  | [#47](https://github.com/Tecso-Dev/sarmiz/issues/47) |
-| `W3-ORD-3` | [پرداخت پای صندوق و «سفارش‌های من»](handoffs/week-3/order.md) | سفارش |  |  | [#48](https://github.com/Tecso-Dev/sarmiz/issues/48) |
+| `W3-ORD-3` | [پرداخت پای صندوق و «سفارش‌های من»](handoffs/week-3/order.md) | سفارش | بازبینی منتور |  | [#48](https://github.com/Tecso-Dev/sarmiz/issues/48) |
 | `W3-ORD-4` | [طراحی ماژول پرداخت](handoffs/week-3/order.md) | سفارش | بازبینی منتور |  | [#49](https://github.com/Tecso-Dev/sarmiz/issues/49) |
 | `W3-WEB-1` | [سبد خرید مهمان و ثبت سفارش](handoffs/week-3/web.md) | فرانت |  |  | [#50](https://github.com/Tecso-Dev/sarmiz/issues/50) |
 | `W3-WEB-2` | [صفحه‌ی زنده‌ی وضعیت سفارش، گارسون و صورت‌حساب](handoffs/week-3/web.md) | فرانت |  |  | [#51](https://github.com/Tecso-Dev/sarmiz/issues/51) |
@@ -147,5 +145,3 @@
 | `W6-ALL-4` | [مستندات](handoffs/week-6/README.md) | همه‌ی تیم |  |  | [#89](https://github.com/Tecso-Dev/sarmiz/issues/89) |
 | `W6-ALL-5` | [سنجیدن معیارهای «تمام شد»](handoffs/week-6/README.md) | همه‌ی تیم |  |  | [#90](https://github.com/Tecso-Dev/sarmiz/issues/90) |
 | `W6-ALL-6` | [روز دمو و تحویل به دوره‌ی بعد](handoffs/week-6/README.md) | همه‌ی تیم |  |  | [#91](https://github.com/Tecso-Dev/sarmiz/issues/91) |
-
-</div>
