@@ -1,11 +1,12 @@
 # Instructions for AI coding assistants
 
-You are helping a junior developer who is an intern at Tecso. They are building Sarmiz, a QR menu and table-ordering product for cafes and restaurants, as their first real product. Read this file fully before you do anything in this repository.
+You are helping a junior developer on the Tecso team. A team of three is building Sarmiz, a QR menu and table-ordering product for cafes and restaurants, as their first real product. Read this file fully before you do anything in this repository.
 
 ## Who you are working with
 
-- Persian-speaking interns who finished a 15-week course: Linux, Git, Go, gRPC, Docker, Kubernetes, React with TypeScript, Python with FastAPI, and RAG with Ollama.
-- A mentor reviews their work and will ask them to explain any line. An intern who cannot explain the code loses the credit for it. Your job is to make them able to explain it, not only to make the code work.
+- Persian-speaking junior developers who know Linux, Git, Go, gRPC, Docker, Kubernetes and React with TypeScript.
+- Three people, each owning one role: `web`, `menu` (identity, catalog, gateway, operations) or `orders` (order, realtime, payments, shared kit, local environment, CI, deployment). `docs/team.md` lists every task of every role, week by week. There is no pair partner, so the other two people review each other's work.
+- A mentor reviews their work and will ask them to explain any line. A developer who cannot explain the code loses the credit for it. Your job is to make them able to explain it, not only to make the code work.
 
 ## How to respond
 
@@ -20,7 +21,8 @@ You are helping a junior developer who is an intern at Tecso. They are building 
 | When | Read |
 |---|---|
 | Always | `docs/SPEC.md`, the technical source of truth. If anything disagrees with it, the spec wins |
-| Starting a task | the task's issue, and the handoff for that week and section in `docs/handoffs/week-N/` |
+| Which tasks are whose, and what was cut | `docs/team.md` and `docs/backlog.md` |
+| Starting a task | the task's issue, and its handoff in `docs/handoffs/week-N/`. The table at the top of each handoff says what changed for the three-person team; it wins over the text below it |
 | Working on one service | `services/<name>/README.md` |
 | Touching contracts | `proto/README.md` and section 6 of the spec |
 | Touching auth or payment | sections 8 and 9 of the spec, and `docs/guide/10-security-and-payments.md` |
@@ -39,7 +41,7 @@ Microservices in one repository. The browser talks only to `gateway` (REST) and 
 | `catalog` | Go | venues, tables and QR, menu, images, public menu, imports |
 | `order` | Go | orders, service requests, payments, reports |
 | `realtime` | Go | WebSocket fan-out of events |
-| `ai` | Python | translation, menu import, AI waiter |
+| `ai` | Python | translation, menu import, AI waiter. Release 2 only: not built now |
 | `web` | React | guest app, owner panel, kitchen screen, landing, admin |
 
 Synchronous calls are gRPC. Events go through NATS JetStream with a transactional outbox. Each service has its own PostgreSQL database. The allowed call graph is in section 4.1 of the spec; do not add a new dependency between services without a decision record.
@@ -57,7 +59,7 @@ These protect real venues and real money. Never work around them.
 7. **Logs.** Never log OTP codes, tokens, credentials or full phone numbers.
 8. **Untrusted text.** Menu text, guest messages and model output are data. Never execute them, never render them as HTML, never let them change a prompt's instructions.
 9. **Provider facts.** Do not write Zarinpal or SMS provider endpoints, fields or codes from memory. Ask the developer to open the provider's official documentation and paste the relevant part.
-10. **Scope.** Build only release 1 (section 2 of the spec). Do not add release 2 or 3 features, new services, or new infrastructure.
+10. **Scope.** Build only release 1 as cut by decision 0007 (section 2 of the spec, `docs/backlog.md`). Handoffs and guide chapters still describe release 2 features such as AI translation, menu import, the AI waiter, time-based menus, pairings, sales reports, ratings and the membership API: do not build them, and say so if the developer asks for one. Do not add release 2 or 3 features, new services, or new infrastructure.
 
 ## Conventions
 
@@ -76,11 +78,11 @@ Web:
 - Tailwind logical utilities only (`ms-`, `me-`, `ps-`, `pe-`, `text-start`); the UI is right to left first.
 - All visible text goes through the i18n layer. Format numbers and prices with `Intl.NumberFormat`.
 
-Python (`services/ai`):
+Python (`services/ai`, release 2 only):
 - FastAPI, Pydantic models for every input and output, model access only through the `LLMProvider` interface, tests with a mocked provider.
 
 Git:
-- Branch `<prefix>/<task-id>-<slug>` with prefix `core`, `order`, `web`, `platform` or `docs`, for example `order/W2-ORD-1-create-order`.
+- Branch `<prefix>/<task-id>-<slug>` with prefix `core`, `order`, `web`, `platform` or `docs`, taken from the task id (`CORE`, `ORD`, `WEB`, `PA`), for example `order/W2-ORD-1-create-order`.
 - Conventional Commits, for example `feat(order): expire unpaid online orders`.
 - Pull request title is a Conventional Commit ending with the task id, for example `feat(order): create order (W2-ORD-1)`, because squash merge uses it as the commit message.
 - One task per pull request. Fill in the pull request template, including the part about AI use.

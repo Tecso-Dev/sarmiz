@@ -1,6 +1,6 @@
 # Sarmiz technical specification
 
-Status: baseline v1, 2026-11-10. Owner: the mentor. Language: English on purpose, so that AI assistants and tools read it precisely.
+Status: baseline v1, 2026-11-10; v1.1, 2026-11-14 (decision 0007: three-person team, release 1 cut). Owner: the mentor. Language: English on purpose, so that AI assistants and tools read it precisely.
 
 **This file is the technical source of truth.** The Persian guide in `docs/guide/` explains it. If a guide chapter, a handoff or an issue disagrees with this file, this file wins and the other one gets fixed. Change this file only through a pull request that also adds a decision record in `docs/decisions/`.
 
@@ -10,21 +10,22 @@ Words used: **venue** = a cafe or restaurant account. **branch** = one physical 
 
 Sarmiz is a QR menu and table-ordering service for cafes and restaurants. An owner signs up with a phone number, builds a menu, and prints one QR code per table. A guest scans the code, reads the menu in their language, orders, and pays online or at the counter. The kitchen sees the order live. No guest account and no app install.
 
-Selling points: AI translation of the menu into five languages, AI menu import from a photo of the paper menu, an AI waiter that answers only from the real menu, and payments that go to the venue rather than to Sarmiz.
+Selling points: AI translation of the menu into five languages, AI menu import from a photo of the paper menu, an AI waiter that answers only from the real menu, and payments that go to the venue rather than to Sarmiz. The three AI features are release 2 (decision 0007).
 
 ## 2. Release 1 scope
 
+Release 1 is built by a team of three in six weeks. Decision 0007 cut its scope; `docs/backlog.md` lists every task and `docs/team.md` says who owns it.
+
 | Area | In release 1 |
 |---|---|
-| Menu | categories, items, photos, item options (size, extras), allergen and diet tags with filters, badges (popular, new, chef), time-based menus, sold-out switch |
-| Languages and AI | menu content in `fa`, `en`, `ar`, `ckb`, `azb`; AI translation; AI menu import from photo (fallback: Excel); AI waiter |
-| Ordering | order from the table, call waiter, ask for the bill, live order status, "goes well with" suggestions |
+| Menu | categories, items, photos, item options (size, extras), allergen and diet tags with filters, badges (popular, new, chef) set by hand, sold-out switch |
+| Languages | menu content in `fa` (required) and optionally `en`, `ar`, `ckb`, `azb`, typed by the owner; UI in `fa` and `en` |
+| Ordering | order from the table, call waiter, ask for the bill, live order status |
 | Payment | online through Zarinpal, or pay at the counter |
-| Owner tools | live kitchen screen, QR designer with logo, venue branding, public menu link for Instagram, sales dashboard |
-| Guests | rating after an order |
+| Owner tools | live kitchen screen, QR designer with logo, venue branding, public menu link for Instagram |
 | Platform | landing page, pricing page, demo cafe and demo restaurant, Tecso admin panel |
 
-Stretch items (first to move after week 6 if time runs out): AI waiter, AI photo import, sales dashboard, time-based menus, pairings.
+Moved to R2 by decision 0007: the `ai` service and every AI feature (translation, menu import from photo, AI waiter), menu import from Excel, time-based menus, "goes well with" pairings, sales reports and dashboard, ratings, and the membership API. If the team falls behind, the mentor cuts further in the order given in `docs/team.md` section 7.
 
 Not in R1: guest accounts, loyalty, split bill, tips, pickup, reservation, kitchen stations, printers, staff management UI, multi-branch UI, delivery, POS links, custom domains. Never: native mobile apps, Tecso holding venue money.
 
@@ -59,10 +60,10 @@ Microservices. One public entry point. Each service owns its data.
 | `catalog` | Go | venues, branches, tables and QR, branding, menu, images, public menu read model, import jobs, stored translations | `catalog` | gRPC |
 | `order` | Go | orders, service requests, ratings, payments, venue payment config, sales reports | `orders` | gRPC |
 | `realtime` | Go | WebSocket hub for kitchen screens and guest order pages | none | WSS `/ws` |
-| `ai` | Python (FastAPI) | translation, menu import, AI waiter (RAG) | `ai` (pgvector) | internal HTTP only |
+| `ai` | Python (FastAPI) | translation, menu import, AI waiter (RAG). **R2 only, not built in R1 (decision 0007)** | `ai` (pgvector) | internal HTTP only |
 | `web` | React, TypeScript | guest app, owner panel, kitchen screen, landing, admin | none | static files behind Nginx |
 
-Shared infrastructure: PostgreSQL (one server, one database and one role per service), Redis (rate limits, caches, OTP codes), NATS JetStream (events), S3-compatible object storage (MinIO in local development), Ollama (models).
+Shared infrastructure: PostgreSQL (one server, one database and one role per service), Redis (rate limits, caches, OTP codes), NATS JetStream (events), S3-compatible object storage (MinIO in local development, or a compatible alternative if its image is not available; W1-PA-1 decides), Ollama (models, R2).
 
 ### 4.1 Communication rules
 
@@ -76,9 +77,9 @@ Shared infrastructure: PostgreSQL (one server, one database and one role per ser
 | Caller | May call |
 |---|---|
 | `gateway` | `identity`, `catalog`, `order` |
-| `catalog` | `identity` (grant membership), `ai` (translate, assistant) |
+| `catalog` | `identity` (grant membership), `ai` (translate, assistant; R2) |
 | `order` | `catalog` (resolve table, price items) |
-| `ai` | `catalog` (read a menu snapshot for indexing) |
+| `ai` | `catalog` (read a menu snapshot for indexing; R2) |
 | `realtime` | `identity` JWKS over internal HTTP only, to verify stream tickets (cached 10 minutes). Alternative: read the public key from a secret. W1-ORD-3 picks one |
 | `identity` | nobody |
 
@@ -90,7 +91,7 @@ Shared infrastructure: PostgreSQL (one server, one database and one role per ser
 - `gateway` is generated with grpc-gateway from HTTP annotations in the proto files, plus hand-written middleware. It holds no business logic.
 - `gateway` sets and clears the `sz_at` and `sz_rt` cookies from the tokens that `identity` returns; `identity` itself speaks only gRPC (plus JWKS).
 - Guest stream tickets: `gateway` calls `order.ValidateOrderToken` first, then `identity.IssueStreamTicket` with scope `order:<order_id>`.
-- Every pair that adds an endpoint also adds its `gateway` route and role rule in the same pull request; the platform pair reviews it. W2-PA-1 builds the routing for weeks 1 to 3, later routes follow this rule.
+- Whoever adds an endpoint also adds its `gateway` route and role rule in the same pull request; the owner of `gateway` (role `menu` in `docs/team.md`) reviews it. W2-PA-1 builds the routing and the role and rate-limit middleware; later routes follow this rule.
 
 ### 4.3 Main flows
 
@@ -232,6 +233,8 @@ The WebSocket is only a notification channel. The panel loads the real state fro
 ## 7. Data model
 
 One PostgreSQL server. Databases `identity`, `catalog`, `orders`, `ai`, each with its own role that can reach only its own database. Migrations with goose, one folder per service, expand-then-contract so a rollback of the code is always safe. Every table has `id uuid primary key`, `created_at`, `updated_at` unless noted. Every venue-owned table has `venue_id uuid not null` and an index that starts with it.
+
+Tables used only by R2 features (`menu_schedules`, `item_pairings`, `import_jobs`, `ratings`, and the `ai` database) are optional in R1; W1-CORE-1 and W1-ORD-1 decide whether to create them now or in R2.
 
 Text shown to guests is stored as JSONB keyed by locale, for example `{"fa": "<Persian name>", "en": "Latte"}`. `fa` is required. Read fallback: requested locale, then `venues.default_locale`, then `fa`.
 
@@ -379,8 +382,8 @@ Enforced in `gateway` with a sliding window in Redis. A blocked request gets `42
 | Create order, per table | 20 per 5 minutes |
 | Create order, per IP | 300 per hour (many guests share one cafe Wi-Fi; tune after the load test) |
 | Service request, per table and type | 1 per 60 s |
-| AI waiter, per guest session | 10 per 5 minutes |
-| AI waiter, per venue | 200 per day |
+| AI waiter, per guest session (R2) | 10 per 5 minutes |
+| AI waiter, per venue (R2) | 200 per day |
 | Uploads, per user | 30 per hour |
 | Panel API, per user | 600 per minute |
 
@@ -438,7 +441,7 @@ Alerts go from Alertmanager to the team's messenger group. Prefer Bale, because 
 | End to end | three flows: owner signs up and publishes a menu; guest orders with pay-at-counter and the kitchen updates the status; guest pays online in sandbox | Playwright |
 | Security | tenant isolation suite: two venues, every panel endpoint tried across venues must fail; role matrix; rate limits | Go tests in `tests/isolation/` |
 | Load | public menu, create order, WebSocket fan-out against the targets in section 3 | k6 |
-| AI | translation sample set, import accuracy on 5 real menus, assistant question set of 30 including off-topic and prompt-injection questions | pytest with fixtures, model mocked in unit tests |
+| AI (R2) | translation sample set, import accuracy on 5 real menus, assistant question set of 30 including off-topic and prompt-injection questions | pytest with fixtures, model mocked in unit tests |
 
 A task is done only when its tests are in the same pull request.
 
@@ -458,7 +461,7 @@ A task is done only when its tests are in the same pull request.
 
 | Environment | Where | Notes |
 |---|---|---|
-| `local` | Docker Compose for PostgreSQL, Redis, NATS, MinIO and optionally Ollama; services run from source | fake SMS that prints the code, fake payment provider |
+| `local` | Docker Compose for PostgreSQL, Redis, NATS and S3-compatible object storage; services run from source | fake SMS that prints the code, fake payment provider |
 | `staging` | namespace on the cluster | Zarinpal sandbox, seeded demo data, deployed on every merge |
 
 Demo venues in `production` stay in payment `sandbox` mode. `is_demo` lives only in `catalog`; demo orders are cleaned up by a nightly job in `order` that deletes orders of venues the `catalog` snapshot lists as demo (exact method decided in W5-CORE-2 with the order pair). The panel polls every 5 s while `realtime` is down, and every 30 s as a safety net otherwise (section 6.4).
@@ -506,6 +509,8 @@ Behaviour when a part is down:
 
 ## 18. AI service
 
+**Release 2 only (decision 0007).** Nothing in this section is built in R1. It stays here so that R2 starts from an agreed design.
+
 Internal HTTP API, protected by a shared secret header and NetworkPolicy:
 
 | Endpoint | Purpose |
@@ -541,6 +546,6 @@ Rules: the API client types are generated from `docs/api/openapi.yaml`; no `any`
 | 2 | Payment settlement model (section 9) | before week 4 |
 | 3 | Hosting provider, and managed PostgreSQL or in-cluster | week 0 |
 | 4 | SMS provider | week 0 |
-| 5 | Models for translation, vision and embeddings | end of week 1 |
-| 6 | Whether the repository stays private (branch protection needs a paid plan for private repositories) | week 0 |
-| 7 | Team size: 8 interns in 4 pairs, or 6 with the stretch items moved out | week 0 |
+| 5 | Models for translation, vision and embeddings | R2, with the `ai` service |
+| 6 | Decided in decision 0007: the repository stays private on the free plan; review rules are kept by discipline and members have `write` access | closed |
+| 7 | Decided in decision 0007: three people in three roles for six weeks, with the R1 cut above | closed |

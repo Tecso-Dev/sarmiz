@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | زبان | Go، روی شاسی [`libs/go/kit`](../../libs/go/kit/README.md) |
-| بخش مسئول | هسته (`core`) |
+| بخش مسئول | هسته (`core`)؛ صاحبش نقش «ورود و منو» است ([تیم و تقسیم کار](../../docs/team.md)) |
 | دیتابیس | `identity`، و Redis برای کد یک‌بارمصرف |
 | ارتباط با بیرون | gRPC، و JWKS روی HTTP داخلی |
 
@@ -38,7 +38,7 @@
 | کد OTP در Redis | کلید <span dir="ltr">`otp:{phone}`</span>، مقدار hash کد و شمارنده‌ی تلاش، TTL ۱۲۰ ثانیه |
 | کلید امضا | از Kubernetes secret؛ هیچ‌وقت در کد یا مخزن نیست |
 
-طرح پایه؛ نمودار نهایی را زوج هسته در `W1-CORE-1` جایگزین می‌کند. `venue_id` در `memberships` یک UUID ساده است، بدون foreign key به `catalog`.
+طرح پایه؛ نمودار نهایی را بخش هسته در `W1-CORE-1` جایگزین می‌کند. `venue_id` در `memberships` یک UUID ساده است، بدون foreign key به `catalog`.
 
 </div>
 
@@ -108,7 +108,7 @@ services/identity/
 | هفته | کار | چه چیزی | تحویل |
 |---|---|---|---|
 | ۱ | `W1-CORE-1` تا `W1-CORE-4` | جدول‌ها و migrationها، ورود کامل با JWT و JWKS و پیامک پشت interface، `GrantMembership` برای ساخت کسب‌وکار، قرارداد proto | [core](../../docs/handoffs/week-1/core.md) |
-| ۲ | `W2-ORD-4` | تیکت WebSocket (`IssueStreamTicket`) همراه با زوج سفارش | [order](../../docs/handoffs/week-2/order.md) |
+| ۲ | `W2-ORD-4` | تیکت WebSocket (`IssueStreamTicket`) همراه با بخش سفارش | [order](../../docs/handoffs/week-2/order.md) |
 | ۴ | `W4-CORE-1` | اعمال جدول دسترسی، APIهای عضویت، audit log | [core](../../docs/handoffs/week-4/core.md) |
 | ۴ | `W4-PA-3` | تست جداسازی و جدول نقش‌ها | [platform-ai](../../docs/handoffs/week-4/platform-ai.md) |
 | ۶ | `W6-ALL-1` | بازبینی امنیتی کامل | [هفته‌ی ۶](../../docs/handoffs/week-6/README.md) |
@@ -116,7 +116,7 @@ services/identity/
 ## ۱۰. سؤال‌های باز
 
 - سرویس پیامک هنوز انتخاب نشده است (بخش ۲۰ مشخصات فنی، تصمیم ۴).
-- مسیر و قالب نشانی JWKS را تیم در `W1-CORE-2` با زوج پلتفرم تعیین می‌کند.
-- `realtime` تیکت را با کدام کلید بررسی می‌کند؟ بخش ۴٫۱ می‌گوید `realtime` به هیچ سرویسی وابسته نیست؛ اگر قرار است JWKS را از `identity` بخواند، سند تصمیم لازم است. در هفته‌ی ۱ با زوج سفارش تصمیم بگیرید.
+- مسیر و قالب نشانی JWKS را تیم در `W1-CORE-2` با بخش پلتفرم تعیین می‌کند.
+- `realtime` تیکت را با کدام کلید بررسی می‌کند؟ بخش ۴٫۱ می‌گوید `realtime` به هیچ سرویسی وابسته نیست؛ اگر قرار است JWKS را از `identity` بخواند، سند تصمیم لازم است. در هفته‌ی ۱ با بخش سفارش تصمیم بگیرید.
 
 </div>

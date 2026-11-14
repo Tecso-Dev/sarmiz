@@ -97,7 +97,7 @@ func TestCanTransition(t *testing.T) {
 | رویدادها | payload ساخته‌شده با schema در <span dir="ltr">`proto/events/`</span> می‌خواند؛ مصرف‌کننده نمونه‌ی معتبر را می‌فهمد | تست Go در منتشرکننده و مصرف‌کننده |
 | OpenAPI | فایل ساخته‌شده با `docs/api/openapi.yaml` یکی است | CI فایل را دوباره می‌سازد و اگر `git diff` خالی نباشد شکست می‌خورد |
 
-تست schema دو طرف دارد: `order` نشان می‌دهد رویداد `sarmiz.order.order.created` که می‌سازد با schema معتبر است، و `realtime` نشان می‌دهد نمونه‌ی معتبر همان schema را درست پخش می‌کند. کتابخانه‌ی اعتبارسنجی JSON Schema را زوج‌های سفارش و پلتفرم در `W1-ORD-4` انتخاب می‌کنند.
+تست schema دو طرف دارد: `order` نشان می‌دهد رویداد `sarmiz.order.order.created` که می‌سازد با schema معتبر است، و `realtime` نشان می‌دهد نمونه‌ی معتبر همان schema را درست پخش می‌کند. کتابخانه‌ی اعتبارسنجی JSON Schema را بخش‌های سفارش و پلتفرم در `W1-ORD-4` انتخاب می‌کنند.
 
 ## ۷. سه مسیر end-to-end
 

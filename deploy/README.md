@@ -12,7 +12,7 @@
 
 ```text
 deploy/
-├── compose/   local infrastructure: PostgreSQL (4 databases and roles), Redis, NATS JetStream, MinIO, optional Ollama
+├── compose/   local infrastructure: PostgreSQL (3 databases and roles), Redis, NATS JetStream, S3-compatible object storage
 ├── helm/      the generic chart for Go services, values per service and environment, other charts and jobs
 ├── grafana/   dashboards as JSON
 └── alerts/    Prometheus alert rules for Alertmanager
@@ -32,6 +32,9 @@ deploy/
 | <span dir="ltr">`alerts/`</span> | ده قاعده‌ی هشدار بخش ۱۲ مشخصات فنی | `W3-PA-2` | [هفته‌ی ۳](../docs/handoffs/week-3/platform-ai.md) |
 | <span dir="ltr">`alerts/`</span> | هشدار شکست پشتیبان شبانه | `W4-PA-1` | [هفته‌ی ۴](../docs/handoffs/week-4/platform-ai.md) |
 
+> [!NOTE]
+> در طرح سه‌نفره ([سند تصمیم ۷](../docs/decisions/0007-three-person-team.md)) دیتابیس `ai` و Ollama لازم نیستند. در زمان نوشتن این طرح، image رسمی MinIO در Docker Hub پیدا نمی‌شد: `W1-PA-1` روز اول بررسی می‌کند و اگر نبود یک object storage سازگار با S3، مثل RustFS، می‌گذارد و انتخاب را همین‌جا می‌نویسد. ستون «کار» بالا شناسه‌ی هر کار را دارد؛ صاحب و هفته‌ی اجرای هر کار در [تیم و تقسیم کار](../docs/team.md) است.
+
 ساختار داخلی هر پوشه را همان کار تعیین می‌کند. اینکه سرویس `ai` (Python) و `web` (Nginx) chart جدا دارند یا با valueهای دیگری مستقر می‌شوند، و اینکه ابزارهای مشاهده‌پذیری با چه chartهایی نصب می‌شوند، در `W1-PA-6` و `W3-PA-1` تصمیم گرفته و همین‌جا نوشته می‌شود.
 
 ## ۲. قواعد
@@ -47,7 +50,7 @@ deploy/
 
 ## ۳. نشانی محیط‌ها
 
-دامنه تصمیم باز ۱ مشخصات فنی است. بعد از قطعی شدنش، زوج پلتفرم در `W1-PA-6` این جدول را پر می‌کند:
+دامنه تصمیم باز ۱ مشخصات فنی است. بعد از قطعی شدنش، بخش پلتفرم در `W1-PA-6` این جدول را پر می‌کند:
 
 | محیط | نشانی وب و API | WebSocket | Grafana و GlitchTip |
 |---|---|---|---|
