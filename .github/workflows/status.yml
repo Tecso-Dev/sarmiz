@@ -1,0 +1,114 @@
+name: status
+
+# Rebuilds the project status page (GitHub Pages), the pinned status issue and the PR status labels,
+# and posts new reviews to Telegram. Code: scripts/status/. Guide: scripts/status/README.md.
+#
+# Safety: every run uses the code on main. The workflow never checks out a pull request's code, and no
+# text from an issue or pull request is put into a shell command. The optional Telegram secrets live in
+# the "status" environment, which only main may use (see the README).
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"   # hourly safety net
+  issues:
+    types: [opened, edited, closed, reopened, assigned, unassigned, labeled, unlabeled, milestoned, demilestoned]
+  pull_request_target:       # runs the workflow from main, not from the pull request
+    types: [opened, reopened, synchronize, ready_for_review, converted_to_draft, closed, labeled, unlabeled,
+            review_requested, review_request_removed, edited]
+  push:
+    branches: [main]
+    paths:
+      - "docs/status/**"
+      - "docs/team.md"
+      - "scripts/status/**"
+      - ".github/workflows/status.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: status
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: status
+    outputs:
+      pages: ${{ steps.pages.outputs.enabled }}
+    permissions:
+      contents: write        # the status-data branch that remembers what was announced
+      issues: write          # the pinned status issue
+      pull-requests: write   # PR status labels
+      pages: read            # to see whether Pages is switched on
+      actions: read          # to show whether the docs check on main is passing
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Unit tests
+        run: python3 -m unittest discover -s scripts/status/tests
+
+      - name: Previous snapshot
+        run: |
+          if git fetch --depth=1 origin status-data 2>/dev/null; then
+            git show FETCH_HEAD:snapshot.json > prev.json
+            echo "found the previous snapshot"
+          else
+            echo "no previous snapshot: this is the first run, nothing will be announced"
+          fi
+
+      - name: Build the page, labels and status issue
+        run: python3 scripts/status/build.py build --out site --prev prev.json --snapshot snapshot.json --events events.json --labels --issue
+
+      - name: Post new events to Telegram
+        run: python3 scripts/status/build.py notify --events events.json
+
+      - name: Remember what was announced
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -rf "$RUNNER_TEMP/data" && mkdir "$RUNNER_TEMP/data" && cp snapshot.json "$RUNNER_TEMP/data/"
+          cd "$RUNNER_TEMP/data"
+          git init -q -b status-data
+          git add snapshot.json
+          git commit -qm "status snapshot"
+          git push -q --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" status-data
+
+      - name: Is GitHub Pages switched on?
+        id: pages
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" --silent 2>/dev/null; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Pages is not enabled::Turn it on once (Settings, Pages, Source: GitHub Actions), then re-run this workflow."
+          fi
+
+      - uses: actions/configure-pages@v6
+        if: steps.pages.outputs.enabled == 'true'
+
+      - uses: actions/upload-pages-artifact@v5
+        if: steps.pages.outputs.enabled == 'true'
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.pages == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

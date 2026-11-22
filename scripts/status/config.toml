@@ -1,0 +1,74 @@
+# Settings for the project status page (scripts/status/build.py).
+# Change a value here, not in the code.
+
+repo = "Tecso-Dev/sarmiz"
+mentor = "sobhanaz"
+students = ["Moh4mmadNSZ", "sahandmusanezhad", "elshan85-mhz"]
+pages_url = "https://tecso-dev.github.io/sarmiz/"
+timezone = "Asia/Tehran"
+
+# Week 1 starts on this Saturday. A week runs Saturday to Wednesday (the demo is on day 5).
+week1_start = "2026-11-21"
+working_days = 5
+
+# The page shows a warning when it has not been rebuilt for this many hours.
+stale_after_hours = 3
+# A pull request bigger than this many changed lines gets a "big" mark (CONTRIBUTING.md: about 400 lines).
+size_limit_lines = 400
+recent_merged = 8
+review_log_size = 30
+
+[roles]
+web = { fa = "فرانت", en = "Front-end" }
+menu = { fa = "ورود و منو", en = "Login and menu" }
+orders = { fa = "سفارش و زیرساخت", en = "Orders and infrastructure" }
+
+# Names and goals of the seven stages. The goals are copied from docs/plan.md (section 6).
+[[weeks]]
+n = 0
+fa = "آماده‌سازی منتور"
+en = "Mentor preparation"
+goal_fa = "دسترسی‌ها، دامنه، سرور و حساب‌ها آماده است و جلسه‌ی شروع برگزار شده."
+goal_en = "Access, domain, server and accounts are ready and the kickoff meeting has been held."
+
+[[weeks]]
+n = 1
+fa = "پایه"
+en = "Foundation"
+goal_fa = "محیط محلی با یک دستور بالا می‌آید، CI سبز است، طرح داده و قراردادها تأیید منتور را دارند، و ورود با کد پیامکی از راه gateway روی محیط محلی کار می‌کند."
+goal_en = "The local environment starts with one command, CI is green, the data design and contracts are approved by the mentor, and login by SMS code works through the gateway locally."
+
+[[weeks]]
+n = 2
+fa = "منو"
+en = "Menu"
+goal_fa = "روی سرور واقعی با دامنه و TLS، یک QR چاپ‌شده روی گوشی یک منوی واقعی باز می‌کند."
+goal_en = "On the real server with a domain and TLS, a printed QR opens a real menu on a phone."
+
+[[weeks]]
+n = 3
+fa = "سفارش"
+en = "Ordering"
+goal_fa = "سفارشی که مهمان با گوشی ثبت می‌کند، در کمتر از ۲ ثانیه روی صفحه‌ی آشپزخانه دیده می‌شود."
+goal_en = "An order a guest places on a phone shows on the kitchen screen in under 2 seconds."
+
+[[weeks]]
+n = 4
+fa = "پرداخت و مدیریت"
+en = "Payment and management"
+goal_fa = "پرداخت آزمایشی سفارش را دقیقاً یک بار «پرداخت‌شده» می‌کند و منتور کد پرداخت را بازبینی کرده است."
+goal_en = "A test payment marks the order paid exactly once, and the mentor has reviewed the payment code."
+
+[[weeks]]
+n = 5
+fa = "ویترین"
+en = "Showcase"
+goal_fa = "یک نفر غریبه بدون کمک، دمو را از اسکن QR تا پرداخت آزمایشی کامل امتحان می‌کند."
+goal_en = "A stranger tries the demo from the QR scan to a test payment without any help."
+
+[[weeks]]
+n = 6
+fa = "محکم‌کاری و انتشار"
+en = "Hardening and release"
+goal_fa = "همه‌ی معیارهای «تمام شد» (بخش ۷ طرح پروژه) برقرار است."
+goal_en = "All the 'done' criteria (section 7 of the project plan) are met."

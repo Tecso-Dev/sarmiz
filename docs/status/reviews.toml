@@ -1,0 +1,178 @@
+# Weekly review results. The status page and the pinned status issue read this file.
+#
+# After each weekly review or demo the mentor records the result here (or asks Claude to):
+#   decision = "pending" | "passed" | "partly" | "failed"
+#   date     = "2026-11-25"                    (the day of the review; empty while not reviewed)
+#   status   = "pending" | "met" | "not_met"   (for every criterion)
+#   note_fa / note_en = a short note for the students (optional)
+# The criteria are copied from docs/plan.md (section 6) and the week pages in docs/handoffs/.
+# Edit this file with a normal commit; the page updates by itself right after the push.
+
+[[week]]
+n = 0
+date = ""
+decision = "pending"
+note_fa = ""
+note_en = ""
+[[week.criteria]]
+fa = "نام نهایی و دامنه قطعی و دامنه خریده شده است."
+en = "The final name and domain are decided and the domain is bought."
+status = "pending"
+[[week.criteria]]
+fa = "سه عضو تیم دسترسی write به ریپو دارند و «تیم و تقسیم کار» را خوانده‌اند. نقش‌ها را خودشان روز اول هفته‌ی ۱ انتخاب می‌کنند."
+en = "The three team members have write access to the repo and have read the Team and roles page. They choose the roles themselves on day 1 of week 1."
+status = "pending"
+[[week.criteria]]
+fa = "سرور داخل ایران آماده است و دسترسی SSH روز اول به صاحب «سفارش و زیرساخت» داده می‌شود."
+en = "The server in Iran is ready, and SSH access goes to the Orders and infrastructure owner on day 1."
+status = "pending"
+[[week.criteria]]
+fa = "حساب sandbox زرین‌پال ساخته شده و از زرین‌پال پرسیده‌ای کدام مدل تسویه مجاز است."
+en = "The Zarinpal sandbox account exists and Zarinpal has been asked which settlement model is allowed."
+status = "pending"
+[[week.criteria]]
+fa = "حساب سرویس پیامک ساخته شده است."
+en = "The SMS service account exists."
+status = "pending"
+[[week.criteria]]
+fa = "درباره‌ی دیده‌شدن ریپو تصمیم گرفته شده است: عمومی می‌ماند و GitHub قفل شاخه‌ی main را اجبار می‌کند."
+en = "The repo visibility is decided: it stays public and GitHub enforces branch protection on main."
+status = "met"
+[[week.criteria]]
+fa = "گروه هشدار در بله یا تلگرام ساخته شده و همه‌ی تیم عضوش هستند."
+en = "The alert group exists in Bale or Telegram and the whole team is in it."
+status = "pending"
+
+[[week]]
+n = 1
+date = ""
+decision = "pending"
+note_fa = ""
+note_en = ""
+[[week.criteria]]
+fa = "روی یک clone تازه، یک دستور زیرساخت محلی را بالا می‌آورد و CI روی PRها اجرا می‌شود و سبز است."
+en = "On a fresh clone, one command starts the local infrastructure, and CI runs on pull requests and is green."
+status = "pending"
+[[week.criteria]]
+fa = "طرح داده‌ی identity، catalog و orders و قرارداد proto identity و catalog تأیید منتور را دارند."
+en = "The data design of identity, catalog and orders and the proto contracts of identity and catalog are approved by the mentor."
+status = "pending"
+[[week.criteria]]
+fa = "روی محیط محلی، کد ورود از راه gateway درخواست و تأیید می‌شود و کوکی‌های sz_at و sz_rt درست تنظیم می‌شوند."
+en = "On the local environment, a login code is requested and verified through the gateway, and the sz_at and sz_rt cookies are set correctly."
+status = "pending"
+[[week.criteria]]
+fa = "اپ web با توکن‌های طراحی و اجزای پایه اجرا می‌شود و wireframeها تأیید منتور را دارند."
+en = "The web app runs with the design tokens and base components, and the wireframes are approved by the mentor."
+status = "pending"
+[[week.criteria]]
+fa = "دسترسی سرور به registry و DNS یک بار سنجیده شده و نتیجه‌اش در گروه تیم نوشته شده است."
+en = "Server access to the registry and to DNS has been measured once and the result is written in the team group."
+status = "pending"
+
+[[week]]
+n = 2
+date = ""
+decision = "pending"
+note_fa = ""
+note_en = ""
+[[week.criteria]]
+fa = "روی staging با دامنه و TLS، یک QR چاپ‌شده روی گوشی یک منوی واقعی باز می‌کند، با دسته‌ها، قیمت‌ها و تغییر زبان بین fa و en."
+en = "On staging with a domain and TLS, a printed QR opens a real menu on a phone, with categories, prices and a language switch between fa and en."
+status = "pending"
+[[week.criteria]]
+fa = "هر merge به main خودکار روی staging مستقر می‌شود."
+en = "Every merge to main is deployed to staging automatically."
+status = "pending"
+
+[[week]]
+n = 3
+date = ""
+decision = "pending"
+note_fa = ""
+note_en = ""
+[[week.criteria]]
+fa = "روی staging، یک نفر QR یک میز را با گوشی اسکن می‌کند، سبد می‌سازد و سفارش «پرداخت پای صندوق» ثبت می‌کند. روی تبلت آشپزخانه، سفارش با صدای اعلان در کمتر از ۲ ثانیه ظاهر می‌شود. زمان با کرنومتر و از روی لاگ‌های همان request_id سنجیده می‌شود."
+en = "On staging, one person scans a table's QR with a phone, builds a cart and places a pay-at-the-counter order. On the kitchen tablet the order appears with a notification sound in under 2 seconds, timed with a stopwatch and from the logs of the same request_id."
+status = "pending"
+[[week.criteria]]
+fa = "منوی مهمان عکس، گزینه‌ها و برند کسب‌وکار را نشان می‌دهد."
+en = "The guest menu shows photos, options and the venue's branding."
+status = "pending"
+[[week.criteria]]
+fa = "سند طراحی پرداخت (W3-ORD-4) تأیید منتور را دارد."
+en = "The payment design document (W3-ORD-4) is approved by the mentor."
+status = "pending"
+
+[[week]]
+n = 4
+date = ""
+decision = "pending"
+note_fa = ""
+note_en = ""
+[[week.criteria]]
+fa = "روی staging، مهمان سفارش آنلاین می‌دهد و در محیط آزمایشی درگاه پرداخت می‌کند."
+en = "On staging, a guest places an online order and pays in the gateway's test environment."
+status = "pending"
+[[week.criteria]]
+fa = "آشپزخانه سفارش را فقط بعد از تأیید پرداخت می‌بیند."
+en = "The kitchen sees the order only after the payment is verified."
+status = "pending"
+[[week.criteria]]
+fa = "اگر callback دوباره صدا زده شود یا کار تطبیق (reconciliation) همان پرداخت را دوباره بررسی کند، هیچ چیزی دو بار ثبت نمی‌شود: یک ردیف verified در payments، یک رویداد order.paid، و payments_verified_total فقط یکی بالا رفته است."
+en = "If the callback is called again or the reconciliation job re-checks the same payment, nothing is recorded twice: one verified row in payments, one order.paid event, and payments_verified_total goes up by only one."
+status = "pending"
+[[week.criteria]]
+fa = "PRهای W4-ORD-1 و W4-ORD-2 تأیید منتور را دارند."
+en = "The PRs for W4-ORD-1 and W4-ORD-2 are approved by the mentor."
+status = "pending"
+
+[[week]]
+n = 5
+date = ""
+decision = "pending"
+note_fa = ""
+note_en = ""
+[[week.criteria]]
+fa = "یک نفر غریبه، یعنی کسی بیرون از تیم سرمیز که تا حالا محصول را ندیده، روی گوشی خودش از صفحه‌ی معرفی وارد دمو می‌شود، سفارش می‌دهد، در محیط آزمایشی زرین‌پال پرداخت می‌کند و وضعیت سفارشش را می‌بیند. هیچ‌کس از تیم در این مدت حرف نمی‌زند و دستش به گوشی نمی‌خورد."
+en = "A stranger, someone outside the Sarmiz team who has never seen the product, enters the demo from the landing page on their own phone, places an order, pays in Zarinpal's test environment and sees their order status. Nobody from the team speaks or touches the phone during this."
+status = "pending"
+[[week.criteria]]
+fa = "همین دمو روی production هم بالاست، با استقرار دستی تأییدشده."
+en = "The same demo is also up on production, with a manually approved deployment."
+status = "pending"
+[[week.criteria]]
+fa = "هشدارهای اصلی به گروه تیم می‌رسند و یک خطای عمدی در GlitchTip دیده می‌شود."
+en = "The main alerts reach the team group and a deliberate error shows up in GlitchTip."
+status = "pending"
+
+[[week]]
+n = 6
+date = ""
+decision = "pending"
+note_fa = ""
+note_en = ""
+[[week.criteria]]
+fa = "صاحب یک کسب‌وکار تازه، بدون کمک، در کمتر از ۱۰ دقیقه ثبت‌نام می‌کند و یک منوی ده‌قلمی را منتشر می‌کند."
+en = "A new venue owner signs up without help in under 10 minutes and publishes a ten-item menu."
+status = "pending"
+[[week.criteria]]
+fa = "مهمان از اسکن QR تا ثبت سفارش کمتر از ۱ دقیقه زمان می‌گذارد."
+en = "A guest takes under 1 minute from scanning the QR to placing an order."
+status = "pending"
+[[week.criteria]]
+fa = "منوی مهمان روی اینترنت موبایل در کمتر از ۲ ثانیه باز می‌شود."
+en = "The guest menu opens in under 2 seconds on mobile internet."
+status = "pending"
+[[week.criteria]]
+fa = "یک پرداخت واقعی از اول تا آخر درست کار می‌کند."
+en = "One real payment works from start to end."
+status = "pending"
+[[week.criteria]]
+fa = "دموی عمومی کافه و دموی عمومی رستوران بالاست."
+en = "The public cafe demo and the public restaurant demo are up."
+status = "pending"
+[[week.criteria]]
+fa = "بازبینی امنیتی هیچ مورد جدیِ بازی ندارد."
+en = "The security review has no serious open finding."
+status = "pending"
