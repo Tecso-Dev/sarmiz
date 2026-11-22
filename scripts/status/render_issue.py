@@ -4,7 +4,7 @@ import hashlib
 
 from fmt import bar, date_fa, fa_digits, percent
 
-STATUS_FA = {"draft": "پیش‌نویس", "needs_author": "منتظر نویسنده", "needs_mentor": "منتظر منتور", "approved": "تأیید شده"}
+STATUS_FA = {"mentor_own": "PR خودِ منتور", "draft": "پیش‌نویس", "needs_author": "منتظر نویسنده", "needs_mentor": "منتظر منتور", "approved": "تأیید شده"}
 TASK_FA = {"done": "✅ انجام شد", "review": "🔎 در بازبینی", "started": "🛠 در دست انجام", "open": "باز"}
 DECISION_FA = {"pending": "هنوز بازبینی نشده", "passed": "برقرار", "partly": "نیمه‌برقرار", "failed": "برقرار نیست"}
 ROLE_FA = {"web": "فرانت", "menu": "ورود و منو", "orders": "سفارش و زیرساخت", "": "کل تیم"}

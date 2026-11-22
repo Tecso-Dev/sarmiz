@@ -123,7 +123,7 @@ def chip(kind: str, fa: str, en: str) -> str:
     return f'<span class="chip chip-{kind}">{b(fa, en)}</span>'
 
 
-PR_CHIP = {"draft": ("info", "پیش‌نویس", "Draft"), "needs_author": ("warn", "منتظر نویسنده", "Waiting for the author"),
+PR_CHIP = {"mentor_own": ("muted", "PR خودِ منتور", "Mentor’s own PR"), "draft": ("info", "پیش‌نویس", "Draft"), "needs_author": ("warn", "منتظر نویسنده", "Waiting for the author"),
            "needs_mentor": ("info", "منتظر منتور", "Waiting for the mentor"), "approved": ("ok", "تأیید شده", "Approved"),
            "merged": ("ok", "merge شد", "Merged"), "closed": ("bad", "بسته شد", "Closed")}
 TASK_CHIP = {"done": ("ok", "انجام شد", "Done"), "review": ("info", "در بازبینی", "In review"),

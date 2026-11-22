@@ -117,6 +117,19 @@ class PullRequestTests(unittest.TestCase):
         self.assertEqual(p["status"], "needs_mentor")
         self.assertEqual(p["teammate"], [{"login": "friend", "state": "approved"}])
 
+    def test_mentors_own_pr_is_not_waiting_for_the_mentor(self):
+        p = model.normalize_pr(pr(7, author="sobhanaz", commits=["2026-11-22T09:00:00Z"]), CFG, NOW)
+        self.assertEqual(p["status"], "mentor_own")
+
+    def test_status_labels_follow_the_status_and_skip_the_mentors_own_pr(self):
+        import actions
+        prs = [model.normalize_pr(pr(7, author="sobhanaz"), CFG, NOW),
+               model.normalize_pr(pr(8, commits=["2026-11-22T09:00:00Z"]), CFG, NOW)]
+        prs[0]["labels"] = ["status:needs-mentor"]          # put there by an earlier version
+        changes = {c["number"]: c for c in actions.label_changes(prs)}
+        self.assertEqual(changes[7], {"number": 7, "add": [], "remove": ["status:needs-mentor"]})
+        self.assertEqual(changes[8], {"number": 8, "add": ["status:needs-mentor"], "remove": []})
+
     def test_draft_merged_closed(self):
         self.assertEqual(self.status(draft=True), "draft")
         self.assertEqual(self.status(state="MERGED"), "merged")

@@ -112,6 +112,8 @@ def normalize_pr(raw: dict, cfg: dict, now: dt.datetime) -> dict:
         status = "closed"
     elif draft:
         status = "draft"
+    elif author == mentor:
+        status = "mentor_own"          # the mentor's own PR: nobody is waiting for the mentor to review it
     elif mentor_state == "APPROVED" and not pushed_after and not mentor_waiting:
         status = "approved"
     elif mentor_state == "CHANGES_REQUESTED" and not pushed_after and not mentor_waiting:
