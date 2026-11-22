@@ -2,13 +2,14 @@
 # The mentor owns everything by default and must review payment and auth code.
 # Replace @sobhanaz with the mentor's account if someone else mentors this cohort.
 #
-# Note: the repository is private on GitHub's free plan, so GitHub does not apply
-# this file (no automatic review requests, no enforcement). It documents ownership;
-# request reviewers by hand as docs/team.md section 4 says. On day 1, after the
-# three roles are chosen, add each owner next to the paths of their role:
-#   web:    /web/  /tests/e2e/
-#   menu:   /services/identity/  /services/catalog/  /services/gateway/  /tests/isolation/
-#   orders: /services/order/  /services/realtime/  /libs/go/kit/  /deploy/  /.github/workflows/  /tests/load/
+# Note: the repository is public and `main` is protected: a pull request needs an
+# approval from a code owner, so the mentor must approve every pull request.
+# GitHub requests the mentor's review automatically. Request a teammate's review by
+# hand (CONTRIBUTING.md section 4); it does not replace the mentor's approval.
+#
+# Do NOT add students as owners of their role's paths. A path whose only owners are
+# students could then be approved by a student, and the mentor gate would be gone.
+# Which role owns which folder is described in docs/team.md.
 
 *                                   @sobhanaz
 

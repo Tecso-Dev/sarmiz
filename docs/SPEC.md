@@ -547,5 +547,5 @@ Rules: the API client types are generated from `docs/api/openapi.yaml`; no `any`
 | 3 | Hosting provider, and managed PostgreSQL or in-cluster | week 0 |
 | 4 | SMS provider | week 0 |
 | 5 | Models for translation, vision and embeddings | R2, with the `ai` service |
-| 6 | Decided in decision 0007: the repository stays private on the free plan; review rules are kept by discipline and members have `write` access | closed |
+| 6 | Decided in decision 0007, updated on 2026-11-22: the repository is public, `main` is protected (pull request, one code owner approval, squash merge only), secret scanning is on, and members have `write` access | closed |
 | 7 | Decided in decision 0007: three people in three roles for six weeks, with the R1 cut above | closed |
