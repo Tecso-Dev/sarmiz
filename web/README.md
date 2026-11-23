@@ -39,7 +39,7 @@
 10. error boundaryها خطا را به GlitchTip گزارش می‌دهند، بدون داده‌ی شخصی.
 11. JavaScript مسیر مهمان حداکثر ۱۵۰ کیلوبایت gzip و LCP زیر ۲ ثانیه روی 4G.
 
-رنگ‌ها و فونت از [راهنمای برند](../docs/brand/README.md) می‌آیند.
+رنگ‌ها و فونت از [راهنمای برند](../docs/brand/README.md) می‌آیند. لوگو و favicon آماده‌اند: محتوای <span dir="ltr">`docs/brand/logo/web/`</span> را در <span dir="ltr">`public/`</span> کپی کن ([راهنمای لوگو](../docs/brand/logo/README.md)).
 
 ## ۴. ساختار پوشه (پیشنهاد اولیه)
 
@@ -57,7 +57,7 @@ web/
 │   ├── i18n/           fa.json, en.json
 │   ├── lib/            money, format, storage helpers
 │   └── styles/         tokens.css
-├── public/             fonts (Vazirmatn), static files
+├── public/             fonts (Vazirmatn), logo files from docs/brand/logo/web/, static files
 └── README.md
 ```
 
