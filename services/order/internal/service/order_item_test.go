@@ -1,16 +1,21 @@
-package domain
+package service
 
-import "testing"
+import (
+	"math"
+	"testing"
+
+	"github.com/Tecso-Dev/sarmiz/services/order/internal/model"
+)
 
 func TestOrderItemValidate(t *testing.T) {
 	tests := []struct {
 		name    string
-		item    OrderItem
+		item    model.OrderItem
 		wantErr bool
 	}{
 		{
 			name: "valid item",
-			item: OrderItem{
+			item: model.OrderItem{
 				ItemID:        "coffee-1",
 				NameSnapshot:  map[string]string{"fa": "قهوه"},
 				UnitPriceRial: 80000,
@@ -20,7 +25,7 @@ func TestOrderItemValidate(t *testing.T) {
 		},
 		{
 			name: "missing item ID",
-			item: OrderItem{
+			item: model.OrderItem{
 				NameSnapshot:  map[string]string{"fa": "قهوه"},
 				UnitPriceRial: 80000,
 				Quantity:      1,
@@ -30,7 +35,7 @@ func TestOrderItemValidate(t *testing.T) {
 		},
 		{
 			name: "zero quantity",
-			item: OrderItem{
+			item: model.OrderItem{
 				ItemID:        "coffee-1",
 				NameSnapshot:  map[string]string{"fa": "قهوه"},
 				UnitPriceRial: 80000,
@@ -41,7 +46,7 @@ func TestOrderItemValidate(t *testing.T) {
 		},
 		{
 			name: "negative price",
-			item: OrderItem{
+			item: model.OrderItem{
 				ItemID:        "coffee-1",
 				NameSnapshot:  map[string]string{"fa": "قهوه"},
 				UnitPriceRial: -100,
@@ -52,7 +57,7 @@ func TestOrderItemValidate(t *testing.T) {
 		},
 		{
 			name: "incorrect line total",
-			item: OrderItem{
+			item: model.OrderItem{
 				ItemID:        "coffee-1",
 				NameSnapshot:  map[string]string{"fa": "قهوه"},
 				UnitPriceRial: 80000,
@@ -62,8 +67,20 @@ func TestOrderItemValidate(t *testing.T) {
 			wantErr: true,
 		},
 		{
+
+			name: "line total multiplication overflows int64",
+			item: model.OrderItem{
+				ItemID:        "coffee-1",
+				NameSnapshot:  map[string]string{"fa": "قهوه"},
+				UnitPriceRial: math.MaxInt64,
+				Quantity:      2,
+				LineTotalRial: 0,
+			},
+			wantErr: true,
+		},
+		{
 			name: "missing Persian name",
-			item: OrderItem{
+			item: model.OrderItem{
 				ItemID:        "coffee-1",
 				NameSnapshot:  map[string]string{"en": "Coffee"},
 				UnitPriceRial: 80000,
@@ -76,7 +93,7 @@ func TestOrderItemValidate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.item.Validate()
+			err := ValidateOrderItem(tt.item)
 
 			if (err != nil) != tt.wantErr {
 				t.Fatalf(

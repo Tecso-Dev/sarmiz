@@ -1,9 +1,6 @@
-package domain
+package model
 
-import (
-	"fmt"
-	"time"
-)
+import "time"
 
 type OrderType string
 
@@ -82,32 +79,4 @@ type OrderItem struct {
 	LineTotalRial   int64
 
 	Note string
-}
-
-func (i OrderItem) Validate() error {
-	if i.ItemID == "" {
-		return fmt.Errorf("item ID is required")
-	}
-
-	if i.Quantity <= 0 {
-		return fmt.Errorf("quantity must be greater than zero")
-	}
-
-	if i.UnitPriceRial < 0 {
-		return fmt.Errorf("unit price cannot be negative")
-	}
-
-	if i.LineTotalRial < 0 {
-		return fmt.Errorf("line total cannot be negative")
-	}
-
-	if i.LineTotalRial != i.UnitPriceRial*int64(i.Quantity) {
-		return fmt.Errorf("line total does not match unit price and quantity")
-	}
-
-	if i.NameSnapshot["fa"] == "" {
-		return fmt.Errorf("Persian item name is required")
-	}
-
-	return nil
 }
