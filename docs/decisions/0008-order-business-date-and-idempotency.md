@@ -1,55 +1,77 @@
-# 8. Order business date and idempotency retention
+<div dir="rtl">
+
+# ۸. تاریخ کاری سفارش و ماندگاری idempotency
 
 | | |
 |---|---|
-| Status | Proposed for implementation |
-| Scope | Order service, W1-ORD-1 |
-| Related | SPEC.md section 7.3, docs/decisions/0004-nats-jetstream-and-outbox.md |
+| وضعیت | پیشنهادی برای پیاده‌سازی؛ منتظر تأیید منتور |
+| تاریخ | ۲۰۲۶-۱۱-۲۶ |
+| تصمیم‌گیرندگان | تیم سرویس `order` |
+| محدوده | سرویس `order`، وظیفهٔ W1-ORD-1 |
+| مرتبط | بخش ۷.۳ از `SPEC.md`، سند تصمیم ۰۰۰۴ دربارهٔ NATS JetStream و الگوی outbox |
 
-## Context
+## زمینه
 
-Order codes restart daily for each venue at midnight in Asia/Tehran.
-The order schema must identify the business date associated with each code.
+شمارهٔ کوتاه سفارش برای هر مجموعه، هر روز در نیمه‌شب منطقهٔ زمانی `Asia/Tehran` از نو آغاز می‌شود. بنابراین تاریخ کاری باید همراه شمارهٔ سفارش ذخیره شود تا شماره‌ها در روزهای مختلف با هم اشتباه نشوند.
 
-Create-order idempotency keys are scoped to a venue and retained for 24 hours.
-Reusing a key with a different request body during that period must return a conflict.
+از طرف دیگر، ممکن است کلاینت به دلیل قطع شبکه، پاسخ ایجاد سفارش را دریافت نکند و همان درخواست را دوباره بفرستد. سرویس باید از ایجاد سفارش تکراری جلوگیری کند و رفتار مشخصی برای استفادهٔ مجدد از کلید idempotency داشته باشد.
 
-## Decision
+توکن سفارش مهمان نیز برای دسترسی به سفارش استفاده می‌شود. چون فقط هش توکن ذخیره می‌شود، سرویس نمی‌تواند توکن قبلی را از دیتابیس بازیابی کند.
 
-### Daily order code
+## تصمیم
 
-- Add `business_date DATE NOT NULL` to `orders`.
-- Calculate the business date in `Asia/Tehran`.
-- Enforce `UNIQUE (venue_id, business_date, code)`.
-- Allocate the next code atomically using `daily_counters`, keyed by
-  `(venue_id, day)`.
-- Keep `table_id` and `item_id` as UUID values without cross-service foreign keys.
+### ۱. شماره و تاریخ کاری سفارش
 
-### Idempotency
+- ستون `business_date` از نوع `DATE NOT NULL` به جدول `orders` اضافه می‌شود.
+- تاریخ کاری با منطقهٔ زمانی `Asia/Tehran` محاسبه می‌شود.
+- ترکیب `venue_id`، `business_date` و `code` یکتا خواهد بود.
+- شمارهٔ بعدی سفارش با استفاده از جدول `daily_counters` و به‌صورت اتمیک، بر اساس مجموعه و تاریخ کاری تخصیص داده می‌شود.
+- شناسه‌های `table_id` و `item_id` به شکل UUID نگه داشته می‌شوند و برای آن‌ها کلید خارجی بین‌سرویسی ایجاد نمی‌شود.
 
-- Scope create-order idempotency keys to `(venue_id, idempotency_key)`.
-- Keep the key reserved for 24 hours after order creation.
-- Store a SHA-256 request fingerprint in `idempotency_request_hash`
-  so a repeated key with a different request body can be rejected.
-- Add a partial unique index on `(venue_id, idempotency_key)` for non-null keys.
-- After 24 hours, the request path must be able to release an expired key
-  transactionally before accepting it for a new request. A background cleanup
-  may also release expired keys.
-- When releasing a key, clear both `idempotency_key` and
-  `idempotency_request_hash`. Preserve the order itself.
-- Concurrent requests using the same active key must be serialized by the
-  database uniqueness constraint and transaction handling.
+### ۲. کلید idempotency
 
-## Consequences
+- محدودهٔ یکتایی کلید ایجاد سفارش، ترکیب <span dir="ltr">`(venue_id, idempotency_key)`</span> است.
+- کلید تا ۲۴ ساعت پس از ایجاد سفارش رزرو می‌ماند.
+- هش SHA-256 اثرانگشت درخواست در ستون `idempotency_request_hash` ذخیره می‌شود تا استفادهٔ مجدد از همان کلید با بدنهٔ متفاوت رد شود.
+- برای کلیدهای غیرتهی، ایندکس یکتای جزئی روی <span dir="ltr">`(venue_id, idempotency_key)`</span> ایجاد می‌شود.
+- پس از پایان ۲۴ ساعت، مسیر درخواست باید بتواند کلید منقضی‌شده را در یک تراکنش آزاد کند؛ پاک‌سازی پس‌زمینه نیز می‌تواند همین کار را انجام دهد.
+- هنگام آزاد کردن کلید، هر دو ستون `idempotency_key` و `idempotency_request_hash` پاک می‌شوند، اما خود سفارش حفظ می‌شود.
+- درخواست‌های هم‌زمان با کلید فعال یکسان باید با محدودیت یکتایی دیتابیس و مدیریت تراکنش هماهنگ شوند.
 
-- `business_date` is an intentional addition to the base schema.
-- `idempotency_request_hash` is an intentional addition to support the
-  documented same-key/different-body conflict behavior.
-- Application code must calculate a stable fingerprint from the validated
-  request, excluding transport-only data.
-- Expired-key cleanup and concurrent duplicate handling require tests.
+### ۳. تکرار درخواست و توکن سفارش
 
-## Review
+- اگر همان کلید idempotency در مدت اعتبار با همان بدنه استفاده شود، سرویس باید همان سفارش را برگرداند و سفارش جدیدی ایجاد نکند.
+- اگر همان کلید در مدت اعتبار با بدنهٔ متفاوت استفاده شود، درخواست باید با خطای `conflict` رد شود.
+- در replay معتبر، یک `order token` تازه صادر می‌شود و هش ذخیره‌شدهٔ `order_token_hash` با هش توکن تازه جایگزین می‌شود.
+- پاسخ replay باید همان شناسهٔ سفارش قبلی و توکن تازه را برگرداند.
+- توکن خام در دیتابیس ذخیره نمی‌شود و فقط از طریق هدر `X-Order-Token` به کلاینت داده می‌شود.
+- تعویض هش توکن باید به‌صورت اتمیک انجام شود تا توکن قبلی پس از موفقیت عملیات دیگر معتبر نباشد.
+- منطق replay، تعویض توکن و رسیدگی به درخواست‌های هم‌زمان باید تست داشته باشد.
 
-This decision records the implementation proposal for W1-ORD-1.
-Obtain mentor review before treating the schema changes as approved.
+## گزینه‌هایی که بررسی شد
+
+### گزینهٔ اول: بازگرداندن همان توکن قبلی
+
+این گزینه مناسب نیست، چون فقط هش توکن ذخیره شده و امکان بازیابی مقدار اصلی وجود ندارد؛ ذخیرهٔ توکن خام نیز انتخاب نمی‌شود.
+
+### گزینهٔ دوم: صدور توکن تازه هنگام replay
+
+این گزینه انتخاب پیشنهادی است. کلاینتی که پاسخ اولیه را دریافت نکرده، می‌تواند با تکرار درخواست معتبر همان سفارش را بگیرد و توکن تازه دریافت کند. در مقابل، توکن قبلی با جایگزینی هش دیگر معتبر نخواهد بود.
+
+## پیامدها
+
+- افزودن `business_date` به طرح پایهٔ دیتابیس عمدی است.
+- افزودن `idempotency_request_hash` برای اجرای قرارداد idempotency ضروری است.
+- اثرانگشت درخواست باید از داده‌های اعتبارسنجی‌شده و با روشی پایدار محاسبه شود و اطلاعات صرفاً مربوط به انتقال درخواست را در بر نگیرد.
+- آزادسازی کلیدهای منقضی‌شده، رقابت درخواست‌های هم‌زمان و تعویض توکن در replay به تست نیاز دارند.
+- کلاینت باید توکن برگشتی از آخرین پاسخ موفق را نگه دارد؛ صدور توکن تازه در هر replay می‌تواند توکن قبلی را باطل کند. در درخواست‌های هم‌زمان، ممکن است توکنی که در یکی از پاسخ‌ها برگردانده شده است، پیش از استفاده نامعتبر شود؛ بنابراین این رفتار باید در قرارداد API و تست‌های هم‌زمانی بررسی و تأیید شود.
+
+## کی دوباره بررسی شود
+
+این تصمیم باید پیش از نهایی شدن قرارداد ایجاد سفارش و توکن در W2 با منتور بازبینی شود؛ به‌ویژه رفتار replay و اثر تعویض توکن بر درخواست‌های هم‌زمان باید تأیید شود.
+
+## بازبینی
+
+این سند تصمیم پیشنهادی برای W1-ORD-1 را ثبت می‌کند. تغییرات طرح دیتابیس و قرارداد replay تا زمان تأیید منتور، تصمیم نهایی و پذیرفته‌شده محسوب نمی‌شوند.
+
+</div>
