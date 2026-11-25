@@ -59,6 +59,7 @@ CREATE TABLE orders (
             (idempotency_key IS NOT NULL AND idempotency_request_hash IS NOT NULL)
         ),
 
+    -- Required as the referenced key for the composite venue/order foreign key.
     CONSTRAINT orders_venue_id_unique
         UNIQUE (venue_id, id)
 );
@@ -92,7 +93,10 @@ CREATE TABLE order_items (
         CHECK (quantity > 0),
 
     CONSTRAINT order_items_amounts_check
-        CHECK (unit_price_rial >= 0 AND line_total_rial >= 0),   
+        CHECK (unit_price_rial >= 0 AND line_total_rial >= 0),
+
+    CONSTRAINT order_items_line_total_check
+        CHECK (line_total_rial = unit_price_rial * quantity),
 
     CONSTRAINT order_items_order_venue_fk
         FOREIGN KEY (venue_id, order_id)
