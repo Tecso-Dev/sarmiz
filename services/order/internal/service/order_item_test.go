@@ -67,14 +67,13 @@ func TestOrderItemValidate(t *testing.T) {
 			wantErr: true,
 		},
 		{
-
-			name: "line total multiplication overflows int64",
+			name: "multiplication overflow",
 			item: model.OrderItem{
 				ItemID:        "coffee-1",
 				NameSnapshot:  map[string]string{"fa": "قهوه"},
 				UnitPriceRial: math.MaxInt64,
-				Quantity:      2,
-				LineTotalRial: 0,
+				Quantity:      3,
+				LineTotalRial: math.MaxInt64 - 2,
 			},
 			wantErr: true,
 		},
