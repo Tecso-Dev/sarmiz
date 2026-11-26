@@ -37,7 +37,7 @@ func ValidateOrderItem(i model.OrderItem) error {
 	}
 
 	if i.NameSnapshot["fa"] == "" {
-		return fmt.Errorf("Persian item name is required")
+		return fmt.Errorf("item name in Persian is required")
 	}
 
 	return nil
