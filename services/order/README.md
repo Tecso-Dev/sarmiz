@@ -37,22 +37,39 @@
 | `service_requests`، `ratings`، `daily_counters` | درخواست سرویس، امتیاز ۱ تا ۵، شمارنده‌ی کد روزانه |
 | `outbox`، `processed_events`، `audit_log` | مثل `catalog` |
 
-ماشین وضعیت پرداخت: `unpaid` به `pending` به `paid` یا `failed`؛ `refunded` در انتشار ۱ دستی است. ماشین وضعیت سفارش در پایین آمده (بخش ۷٫۳ مشخصات فنی)؛ نسخه‌ی نهایی را بخش سفارش در `W1-ORD-1` اینجا می‌گذارد:
+ماشین‌های وضعیت سفارش و پرداخت مطابق بخش ۷٫۳ مشخصات فنی هستند. تغییر وضعیت به همان وضعیت فعلی و وضعیت‌های ناشناخته رد می‌شود.
+
+روز تجاری سفارش بر اساس منطقه‌ی زمانی `Asia/Tehran` محاسبه می‌شود. کد کوتاه هر کسب‌وکار برای هر روز تجاری از نو آغاز می‌شود.
+
+دامنه‌ی یکتایی کلید idempotency برابر با <span dir="ltr">`(venue_id, idempotency_key)`</span> است. کلید به مدت ۲۴ ساعت از زمان ایجاد سفارش نگه داشته می‌شود. استفاده‌ی دوباره از همان کلید با بدنه‌ی متفاوت باید تعارض ایجاد کند.
+
+در سفارش آنلاین، انتقال `awaiting_payment` به `pending` فقط پس از تأیید پرداخت انجام می‌شود؛ این انتقال نباید از مسیر تغییر وضعیت دستی کارمند انجام شود. سفارش صندوقی از ابتدا با وضعیت `pending` ایجاد می‌شود.
 
 </div>
 
 ```mermaid
 stateDiagram-v2
-  [*] --> awaiting_payment: online
-  [*] --> pending: counter
-  awaiting_payment --> pending: payment verified
-  pending --> accepted
-  accepted --> preparing
-  preparing --> ready
-  ready --> served
-  awaiting_payment --> cancelled
-  pending --> cancelled
-  accepted --> cancelled
+    [*] --> awaiting_payment: online
+    [*] --> pending: counter
+    awaiting_payment --> pending: payment verified
+    awaiting_payment --> cancelled
+    pending --> accepted
+    pending --> cancelled
+    accepted --> preparing
+    accepted --> cancelled
+    preparing --> ready
+    ready --> served
+```
+
+```mermaid
+stateDiagram-v2
+    [*] --> unpaid
+    unpaid --> pending: online payment started
+    pending --> paid: payment verified
+    pending --> failed: payment failed
+    failed --> pending: retry
+    unpaid --> paid: counter payment
+    paid --> refunded: manual refund
 ```
 
 <div dir="rtl">
@@ -117,6 +134,6 @@ services/order/
 
 - مدل تسویه (A یا B) باز است و منتور تا قبل از هفته‌ی ۴ با Zarinpal روشنش می‌کند ([سند تصمیم ۶](../../docs/decisions/0006-payment-settlement-model.md)). کد پشت `PaymentProvider` است تا هر دو جا بشوند.
 - شکل دقیق `settlement` در `payment_configs` به همان تصمیم بستگی دارد؛ تیم در `W3-ORD-4` می‌نویسد.
-- کد کوتاه روزانه بر اساس روز کدام منطقه‌ی زمانی صفر می‌شود؟ مشخصات فنی نگفته است؛ تیم در `W1-ORD-1` تصمیم می‌گیرد.
+- کد کوتاه روزانه بر اساس روز تجاری در منطقه‌ی زمانی `Asia/Tehran` از نو آغاز می‌شود.
 
 </div>
