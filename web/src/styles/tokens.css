@@ -1,0 +1,16 @@
+:root {
+  /* Brand colors */
+  --color-cream: #FBF6EC;
+  --color-espresso: #2B1D14;
+  --color-saffron: #E8A013;
+
+  /* Semantic colors */
+  --color-background: var(--color-cream);
+  --color-text: var(--color-espresso);
+  --color-heading: var(--color-espresso);
+  --color-border: rgba(43, 29, 20, 0.15);
+
+  /* Typography */
+  --font-sans: 'Vazirmatn', sans-serif;
+  --font-heading: 'Vazirmatn', sans-serif;
+}
