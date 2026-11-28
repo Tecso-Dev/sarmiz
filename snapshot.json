@@ -1,0 +1,34 @@
+{
+ "generated_at": "2026-11-28T10:20:02Z",
+ "prs": {
+  "95": {
+   "state": "open",
+   "title": "feat(web): scaffold React TypeScript app [W1-WEB-1]",
+   "url": "https://github.com/Tecso-Dev/sarmiz/pull/95",
+   "author": "elshan85-mhz",
+   "requested": [],
+   "reviews": []
+  },
+  "94": {
+   "state": "merged",
+   "title": "docs(brand): add logo set and redesign the README",
+   "url": "https://github.com/Tecso-Dev/sarmiz/pull/94",
+   "author": "sobhanaz",
+   "requested": [],
+   "reviews": []
+  },
+  "92": {
+   "state": "merged",
+   "title": "feat(order): add order data model (W1-ORD-1)",
+   "url": "https://github.com/Tecso-Dev/sarmiz/pull/92",
+   "author": "Moh4mmadNSZ",
+   "requested": [
+    "sahandmusanezhad"
+   ],
+   "reviews": [
+    "sobhanaz|CHANGES_REQUESTED|2026-11-22T18:32:47Z",
+    "sobhanaz|APPROVED|2026-11-26T10:14:32Z"
+   ]
+  }
+ }
+}
