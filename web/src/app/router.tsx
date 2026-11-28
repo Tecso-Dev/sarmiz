@@ -3,7 +3,10 @@ import { Suspense } from 'react'
 import { createBrowserRouter } from 'react-router'
 import {
   HomePage,
+  PricingPage,
   GuestPage,
+  MenuPage,
+  OrderPage,
   PanelPage,
   AdminPage,
   Loading,
@@ -42,6 +45,30 @@ const router = createBrowserRouter([
       </Suspense>
     ),
   },
+  {
+  path: '/pricing',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <PricingPage />
+    </Suspense>
+  ),
+},
+{
+  path: '/m/:slug',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <MenuPage />
+    </Suspense>
+  ),
+},
+{
+  path: '/o/:orderId',
+  element: (
+    <Suspense fallback={<Loading />}>
+      <OrderPage />
+    </Suspense>
+  ),
+},
 ])
 
 export default router
